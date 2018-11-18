@@ -547,12 +547,19 @@ func TestIntegrated(t *testing.T) {
 			},
 		},
 	}
-	SetAddr("127.0.0.1", "2222")
 	db, err := sql.Open("mysql", "admin:test@/nphw3")
 	if err != nil {
 		t.Error("Could not open database: ", err)
 	}
 	defer db.Close()
+	err = SetAddr("127.0.0.1", "2222")
+	if err != nil {
+		t.Error("Could not set address: ", err)
+	}
+	err = CreateTables(db)
+	if err != nil {
+		t.Error("Could not create tables: ", err)
+	}
 	go Run(db)
 	time.Sleep(time.Second)
 
