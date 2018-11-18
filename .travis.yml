@@ -6,6 +6,11 @@ go:
 env:
   - GO111MODULE=on
 
-install: true
+service:
+  - mysql
 
-script: go build -v ./...
+before_install:
+  -> mysql -e "CREATE DATABASE nphw3;
+  CREATE USER 'admin'@'localhost' IDENTIFIED BY 'test';
+  GRANT ALL PRIVILEGES ON nphw3.* TO 'admin'@'localhost';
+  FLUSH PRIVILEGES;"
