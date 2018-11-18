@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - "1.11.x"
+
+env:
+  - GO111MODULE=on
+
+service:
+  - mysql
+
+before_install: > 
+  mysql -e "CREATE DATABASE nphw3;
+  CREATE USER 'admin'@'localhost' IDENTIFIED BY 'test';
+  GRANT ALL PRIVILEGES ON nphw3.* TO 'admin'@'localhost';
+  FLUSH PRIVILEGES;"
