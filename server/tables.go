@@ -39,24 +39,6 @@ func CreateTables(db *sql.DB) error {
 	return nil
 }
 
-// DropTables 刪除已建立的表格
-func DropTables(db *sql.DB) error {
-	queries := []string{
-		"DROP TABLE IF EXISTS user",
-		"DROP TABLE IF EXISTS login",
-		"DROP TABLE IF EXISTS invite",
-		"DROP TABLE IF EXISTS friend",
-		"DROP TABLE IF EXISTS post",
-	}
-	for _, query := range queries {
-		_, err := db.Exec(query)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // TruncateTables 清除表格中所有資料
 func TruncateTables(db *sql.DB) error {
 	queries := []string{

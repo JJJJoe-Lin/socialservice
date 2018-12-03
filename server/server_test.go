@@ -2,7 +2,7 @@ package socialserviceserver
 
 import (
 	"database/sql"
-	ssc "socialservice/client"
+	"socialservice/client"
 	"sort"
 	"strings"
 	"testing"
@@ -10,6 +10,40 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 )
+
+var db *sql.DB
+
+func beforeTest(t testing.TB) {
+	var err error
+	db, err = sql.Open("mysql", "admin:test@tcp(db)/nphw3")
+	if err != nil {
+		t.Error("Could not open database: ", err)
+	}
+	for retryTime := 0; db.Ping() != nil; retryTime++ {
+		if retryTime >= 10 {
+			t.Error("Could not connet to database")
+		}
+		time.Sleep(time.Duration(10) * time.Second)
+	}
+	err = SetAddr("127.0.0.1", "2222")
+	if err != nil {
+		t.Error("Could not set address: ", err)
+	}
+	err = CreateTables(db)
+	if err != nil {
+		t.Error("Could not create tables: ", err)
+	}
+	go Run(db)
+	time.Sleep(time.Second)
+}
+
+func afterTest(t testing.TB) {
+	err := TruncateTables(db)
+	if err != nil {
+		t.Error("Could not truncate tables: ", err)
+	}
+	db.Close()
+}
 
 func TestIntegrated(t *testing.T) {
 	// Arrange
@@ -547,26 +581,12 @@ func TestIntegrated(t *testing.T) {
 			},
 		},
 	}
-	db, err := sql.Open("mysql", "admin:test@/nphw3")
-	if err != nil {
-		t.Error("Could not open database: ", err)
-	}
-	defer db.Close()
-	err = SetAddr("127.0.0.1", "2222")
-	if err != nil {
-		t.Error("Could not set address: ", err)
-	}
-	err = CreateTables(db)
-	if err != nil {
-		t.Error("Could not create tables: ", err)
-	}
-	go Run(db)
-	time.Sleep(time.Second)
 
+	beforeTest(t)
 	for _, tc := range testlist {
 		t.Run(tc.testName, func(t *testing.T) {
 			// Act
-			client, err := ssc.NewTCPClient("127.0.0.1", "2222")
+			client, err := client.NewTCPClient("127.0.0.1", "2222")
 			if err != nil {
 				t.Error("Could not create client: ", err)
 			}
@@ -586,4 +606,5 @@ func TestIntegrated(t *testing.T) {
 			}
 		})
 	}
+	afterTest(t)
 }

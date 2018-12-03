@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	ssc "socialservice/client"
+	"socialservice/client"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 		log.Fatalln("Need two argument.")
 	}
 
-	client, err := ssc.NewTCPClient(os.Args[1], os.Args[2])
+	client, err := client.NewTCPClient(os.Args[1], os.Args[2])
 	if err != nil {
 		log.Fatalln(err)
 	}
