@@ -1,4 +1,4 @@
-package socialserviceclient
+package client
 
 import (
 	"encoding/json"

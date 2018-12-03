@@ -1,4 +1,4 @@
-package socialserviceserver
+package server
 
 import (
 	"database/sql"
@@ -29,24 +29,6 @@ func CreateTables(db *sql.DB) error {
 			author varchar(64), 
 			message text
 		)`,
-	}
-	for _, query := range queries {
-		_, err := db.Exec(query)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// DropTables 刪除已建立的表格
-func DropTables(db *sql.DB) error {
-	queries := []string{
-		"DROP TABLE IF EXISTS user",
-		"DROP TABLE IF EXISTS login",
-		"DROP TABLE IF EXISTS invite",
-		"DROP TABLE IF EXISTS friend",
-		"DROP TABLE IF EXISTS post",
 	}
 	for _, query := range queries {
 		_, err := db.Exec(query)

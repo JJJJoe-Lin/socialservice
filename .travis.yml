@@ -1,16 +1,11 @@
-language: go
-
-go:
-  - "1.11.x"
-
-env:
-  - GO111MODULE=on
-
 service:
-  - mysql
+  - docker
 
-before_install: > 
-  mysql -e "CREATE DATABASE nphw3;
-  CREATE USER 'admin'@'localhost' IDENTIFIED BY 'test';
-  GRANT ALL PRIVILEGES ON nphw3.* TO 'admin'@'localhost';
-  FLUSH PRIVILEGES;"
+install:
+  - docker-compose build
+
+before_script:
+  - docker-compose up -d db
+
+script:
+  - docker-compose run server sh -c "go test -v socialservice/server"

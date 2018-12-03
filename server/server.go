@@ -1,4 +1,4 @@
-package socialserviceserver
+package server
 
 import (
 	"database/sql"
