@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	server "socialservice/server"
+	"socialservice/server"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
